@@ -40,9 +40,9 @@ let boarImg;
 let boarSpawns = [];
 
 let boarAnis = {
-  run: { row: 1, frames: 4, frameDelay: 3 },
-  throwPose: { row: 4, frames: 1, frameDelay: Infinity, frame: 0 },
-  death: { row: 5, frames: 4, frameDelay: 16 },
+  run: { row: 2, frames: 6, frameDelay: 4 }, // side walk
+  throwPose: { row: 0, frames: 6, frameDelay: 12 }, // front idle (stun/knock)
+  death: { row: 7, frames: 4, frameDelay: 16 }, // lying down
 };
 
 let attacking = false;
@@ -148,9 +148,13 @@ const PLAYER_JUMP = 4.5;
 const ATTACK_RANGE_X = 20;
 const ATTACK_RANGE_Y = 16;
 
+// bull sprite frame size (64x64 per frame)
+const BULL_FRAME_W = 64;
+const BULL_FRAME_H = 64;
+
 // boar tuning
-const BOAR_W = 18;
-const BOAR_H = 12;
+const BOAR_W = 28;
+const BOAR_H = 16;
 const BOAR_SPEED = 0.6;
 const BOAR_HP = 3;
 
@@ -200,7 +204,7 @@ function tileAtWorld(x, y) {
 
 function preload() {
   playerImg = loadImage("assets/adventurer_sprite_sheet_v1.1.png");
-  boarImg = loadImage("assets/boarSpriteSheet.png");
+  boarImg = loadImage("assets/Bull_animation_with_shadow.png");
   leafImg = loadImage("assets/leafSpriteSheet.png");
   fireImg = loadImage("assets/fireSpriteSheet.png");
 
@@ -1057,8 +1061,8 @@ function restartGame() {
 
   boar = new Group();
   boar.spriteSheet = boarImg;
-  boar.anis.w = FRAME_W;
-  boar.anis.h = FRAME_H;
+  boar.anis.w = BULL_FRAME_W;
+  boar.anis.h = BULL_FRAME_H;
   boar.anis.offset.y = -8;
   boar.addAnis(boarAnis);
   boar.overlaps(fire, boarDiesInFire);
@@ -1068,8 +1072,8 @@ function restartGame() {
     e.spriteSheet = boarImg;
     e.rotationLock = true;
 
-    e.anis.w = FRAME_W;
-    e.anis.h = FRAME_H;
+    e.anis.w = BULL_FRAME_W;
+    e.anis.h = BULL_FRAME_H;
     e.anis.offset.y = -8;
     e.addAnis(boarAnis);
 
@@ -1126,8 +1130,8 @@ function makeWorld() {
   // --- ENEMIES (boar spawned from 'b') ---
   boar = new Group();
   boar.spriteSheet = boarImg;
-  boar.anis.w = FRAME_W;
-  boar.anis.h = FRAME_H;
+  boar.anis.w = BULL_FRAME_W;
+  boar.anis.h = BULL_FRAME_H;
   boar.anis.offset.y = -8;
   boar.addAnis(boarAnis);
   boar.physics = "dynamic";
