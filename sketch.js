@@ -149,8 +149,8 @@ const ATTACK_RANGE_X = 20;
 const ATTACK_RANGE_Y = 16;
 
 // bull sprite frame size (64x64 per frame)
-const BULL_FRAME_W = 64;
-const BULL_FRAME_H = 64;
+const BULL_FRAME_W = 35;
+const BULL_FRAME_H = 35;
 
 // boar tuning
 const BOAR_W = 28;
