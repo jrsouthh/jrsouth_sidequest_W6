@@ -26,6 +26,39 @@
 let player, sensor;
 let playerImg;
 
+// --- SOUNDS ---
+// Audio elements live in index.html as <audio id="snd..."> tags.
+let sndBackground, sndAttack, sndJump, sndCollect, sndDamage;
+let bgStarted = false;
+
+function initSounds() {
+  sndBackground = document.getElementById("sndBackground");
+  sndAttack = document.getElementById("sndAttack");
+  sndJump = document.getElementById("sndJump");
+  sndCollect = document.getElementById("sndCollect");
+  sndDamage = document.getElementById("sndDamage");
+  if (sndBackground) sndBackground.volume = 0.4;
+}
+
+function playFX(snd) {
+  if (!snd) return;
+  snd.currentTime = 0;
+  snd.play();
+}
+
+function startBgMusic() {
+  if (bgStarted || !sndBackground) return;
+  bgStarted = true;
+  sndBackground.play();
+}
+
+function stopBgMusic() {
+  if (!sndBackground) return;
+  sndBackground.pause();
+  sndBackground.currentTime = 0;
+  bgStarted = false;
+}
+
 let playerAnis = {
   idle: { row: 0, frames: 4, frameDelay: 10 },
   run: { row: 1, frames: 4, frameDelay: 3 },
@@ -229,6 +262,9 @@ function setup() {
   applyIntegerScale();
   window.addEventListener("resize", applyIntegerScale);
 
+  // Load all sounds immediately (AudioContext created on first user gesture)
+  initSounds();
+
   allSprites.pixelPerfect = true;
 
   // Manual physics stepping for stable pixel rendering
@@ -256,6 +292,11 @@ function setup() {
 
 function draw() {
   background(69, 61, 79);
+
+  // start background music on first user interaction
+  if (!bgStarted && kb.pressing()) {
+    startBgMusic();
+  }
 
   // 1) decide boar vel/turns using probes
   updateBoars();
@@ -298,6 +339,7 @@ function draw() {
     player.ani.frame = 0;
     player.ani = "attack";
     player.ani.play();
+    playFX(sndAttack);
   }
 
   // JUMP
@@ -310,6 +352,7 @@ function draw() {
     kb.presses("up")
   ) {
     player.vel.y = -1 * PLAYER_JUMP;
+    playFX(sndJump);
   }
 
   // --- PLAYER STATE / ANIMATION ---
@@ -397,6 +440,7 @@ function draw() {
     dead = true;
     pendingDeath = false;
     deathStarted = false;
+    stopBgMusic();
   }
 
   // start death animation once
@@ -567,6 +611,8 @@ function rescueLeaf(player, leaf) {
   leaf.removeColliders();
   score++;
 
+  playFX(sndCollect);
+
   // win condition
   if (score >= WIN_SCORE) {
     won = true;
@@ -582,6 +628,8 @@ function takeDamageFromFire(player, fire) {
 
   health = max(0, health - 1);
   if (health <= 0) pendingDeath = true;
+
+  playFX(sndDamage);
 
   invulnTimer = INVULN_FRAMES;
   knockTimer = KNOCK_FRAMES;
@@ -601,6 +649,8 @@ function playerHitByBoar(player, e) {
 
   health = max(0, health - 1);
   if (health <= 0) pendingDeath = true;
+
+  playFX(sndDamage);
 
   invulnTimer = INVULN_FRAMES;
   knockTimer = KNOCK_FRAMES;
@@ -1122,6 +1172,8 @@ function restartGame() {
   player.overlaps(boar, playerHitByBoar);
 
   lastScore = lastHealth = lastMaxHealth = null;
+
+  startBgMusic();
 }
 
 function makeWorld() {
