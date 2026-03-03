@@ -205,7 +205,7 @@ function tileAtWorld(x, y) {
 function preload() {
   playerImg = loadImage("assets/adventurer_sprite_sheet_v1.1.png");
   boarImg = loadImage("assets/Bull_animation_with_shadow.png");
-  leafImg = loadImage("assets/leafSpriteSheet.png");
+  leafImg = loadImage("assets/Slime1_Idle_without_shadow.png");
   fireImg = loadImage("assets/fireSpriteSheet.png");
 
   bgFarImg = loadImage("assets/background_layer_1.png");
@@ -1141,11 +1141,11 @@ function makeWorld() {
   leaf = new Group();
   leaf.physics = "static";
   leaf.spriteSheet = leafImg;
-  leaf.addAnis({ idle: { w: 32, h: 32, row: 0, frames: 5 } });
-  leaf.w = 10;
-  leaf.h = 6;
-  leaf.anis.offset.x = 2;
-  leaf.anis.offset.y = -4;
+  leaf.addAnis({ idle: { w: 64, h: 64, row: 0, frames: 6, frameDelay: 8 } });
+  leaf.w = 14;
+  leaf.h = 14;
+  leaf.anis.offset.x = 0;
+  leaf.anis.offset.y = 0;
   leaf.tile = "x";
 
   fire = new Group();
